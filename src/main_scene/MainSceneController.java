@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -49,6 +50,9 @@ public class MainSceneController {
     @FXML
     private Text textWater;
 
+
+    @FXML
+    private TextField tfSearch;
     @FXML
     private TableView<String[]> tableView;
 
@@ -78,6 +82,34 @@ public class MainSceneController {
             AddController controller = loader.getController();
             controller.setAttributes(tableController.currentTable);
             controller.setMainController(this);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(tableView.getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onClickFind(){
+        String word = tfSearch.getText().trim();
+        if(word.isEmpty())
+            DatabaseController.showAlert("Input error", "Field cannot be empty");
+        else {
+            tableController.database.find(tableController.currentTable, word);
+        }
+    }
+
+    @FXML
+    public void onClickTerminal(){
+        try {
+            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("terminal_scene/terminal_scene.fxml"));
+            Parent root = loader.load();
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);

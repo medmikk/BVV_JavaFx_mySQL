@@ -59,21 +59,30 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button id="openTerminalButton" mnemonicParsing="false" prefHeight="25.0" text="Open Terminal" GridPane.columnIndex="3">
+                                <Button id="openTerminalButton" mnemonicParsing="false" onMouseClicked="#onClickTerminal" prefHeight="25.0" text="Terminal" GridPane.columnIndex="3">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
+                           <font>
+                              <Font name="Consolas" size="12.0" />
+                           </font>
                                 </Button>
                                 <TextField fx:id="tfSearch" maxWidth="1.7976931348623157E308" minWidth="200.0" GridPane.columnIndex="1" />
-                                <Button minWidth="-Infinity" mnemonicParsing="false" text="Find" GridPane.columnIndex="2">
+                                <Button minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#onClickFind" text="Find" GridPane.columnIndex="2">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
+                           <font>
+                              <Font name="Consolas" size="12.0" />
+                           </font>
                                 </Button>
                                 <Button minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#onClickInsert" text="New">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
+                           <font>
+                              <Font name="Consolas" size="12.0" />
+                           </font>
                                 </Button>
                             </children>
                         </GridPane>

@@ -138,11 +138,70 @@ public class DatabaseController {
             res.next();
             for (int i = 0; i < count; i++)
                 result.add(res.getString(i + 1));
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return result;
+    }
+
+    public void find(String tableName, String word){
+        ArrayList<String> attributes = getAttributeNames(tableName);
+        String sql = "SELECT * FROM " + tableName + " WHERE " + attributes.get(0) + " LIKE '%" + word + "%'";
+
+        for (int i = 1; i < attributes.size(); i++)
+            sql += "OR " + attributes.get(i) + " LIKE '%" + word + "%'";
+
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            ResultSet res = statement.executeQuery(sql);
+            showResultSetInTable(res);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public String handleStatement(String sql){
+        sql = sql.trim().split(";")[0];
+        String command = sql.trim().toLowerCase(Locale.ROOT).split(" ")[0];
+        try {
+            if(command.equals("select")) {
+                Statement statement = connection.createStatement();
+                ResultSet res = statement.executeQuery(sql);
+                showResultSetInTable(res);
+                return "successful " + command;
+            } else if (command.equals("insert") || command.equals("delete") || command.equals("update")){
+                PreparedStatement prSt = connection.prepareStatement(sql);
+                prSt.executeUpdate();
+                return "successful " + command;
+            } else
+                return "Unknown command or you have no permission to use this command";
+        } catch (SQLException e) {
+            return e.toString();
+        }
+    }
+
+    private void showResultSetInTable(ResultSet row) throws SQLException {
+
+        ResultSetMetaData meta= row.getMetaData();
+        DefaultTableModel model = new DefaultTableModel();
+
+        String[] cols = new String[meta.getColumnCount()];
+
+        for(int i = 0; i < cols.length; ++i)
+            cols[i] = meta.getColumnLabel(i + 1);
+
+        model.setColumnIdentifiers(cols);
+
+        while(row.next()) {
+            Object[] data = new Object[cols.length];
+
+            for(int i = 0; i < data.length; ++i)
+                data[i] = row.getObject(i+1);
+
+            model.addRow(data);
+        }
+        JOptionPane.showMessageDialog(null, new JScrollPane(new JTable(model)));
     }
 
     public static void showAlert(String header, String message){
