@@ -144,8 +144,9 @@ public class DatabaseController {
         return result;
     }
 
-    public void find(String tableName, String word){
+    public ArrayList<Entity> find(String tableName, String word){
         ArrayList<String> attributes = getAttributeNames(tableName);
+        ArrayList<Entity> items = new ArrayList<>();
         String sql = "SELECT * FROM " + tableName + " WHERE " + attributes.get(0) + " LIKE '%" + word + "%'";
 
         for (int i = 1; i < attributes.size(); i++)
@@ -155,10 +156,20 @@ public class DatabaseController {
         try {
             statement = connection.createStatement();
             ResultSet res = statement.executeQuery(sql);
-            showResultSetInTable(res);
+            //showResultSetInTable(res);
+            Integer colsCount = getCountOfColumns(tableName);
+
+            while(res.next()) {
+                ArrayList<String> params = new ArrayList<>();
+                for (int i = 0; i < colsCount; i++)
+                    params.add(res.getString(i + 1));
+                Entity item = new Entity(params);
+                items.add(item);
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return items;
     }
 
     public String handleStatement(String sql){

@@ -102,7 +102,8 @@ public class MainSceneController {
         if(word.isEmpty())
             DatabaseController.showAlert("Input error", "Field cannot be empty");
         else {
-            tableController.database.find(tableController.currentTable, word);
+            //tableController.database.find(tableController.currentTable, word);
+            tableController.switchTableForFind(word);
         }
     }
 
@@ -188,10 +189,19 @@ public class MainSceneController {
 
         public void switchTable(String tableName){
             currentTable = tableName;
+            ArrayList<Entity> table = database.getTable(tableName);
+            setTableContent(table);
+        }
+
+        public void switchTableForFind(String word){
+            ArrayList<Entity> table = database.find(currentTable, word);
+            setTableContent(table);
+        }
+
+        private void setTableContent(ArrayList<Entity> table){
             tableView.getItems().clear();
             tableView.getColumns().clear();
-            ArrayList<String> attributeNames = database.getAttributeNames(tableName);
-            ArrayList<Entity> table = database.getTable(tableName);
+            ArrayList<String> attributeNames = database.getAttributeNames(currentTable);
             ArrayList<String[]> tableList = new ArrayList<>();
             for(int i = 0; i < table.size(); i ++){
                 String[] item = table.get(i).getAttributesArray();
@@ -214,6 +224,7 @@ public class MainSceneController {
 
             }
             tableView.setItems(FXCollections.observableArrayList(tableList));
+
         }
     }
 }
