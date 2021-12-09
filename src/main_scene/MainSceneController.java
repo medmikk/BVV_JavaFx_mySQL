@@ -4,6 +4,7 @@ import Domain.DatabaseController;
 import Domain.Entity;
 import adding_scene.AddController;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -191,14 +192,19 @@ public class MainSceneController {
             tableView.getColumns().clear();
             ArrayList<String> attributeNames = database.getAttributeNames(tableName);
             ArrayList<Entity> table = database.getTable(tableName);
+            ArrayList<String[]> tableList = new ArrayList<>();
+            for(int i = 0; i < table.size(); i ++){
+                String[] item = table.get(i).getAttributesArray();
+                tableList.add(item);
+            }
             for (int i = 0; i < attributeNames.size(); i++){
                 String attrName = attributeNames.get(i);
                 TableColumn<String[], String> tableColumn = new TableColumn<>(attrName);
                 tableView.getColumns().add(tableColumn);
 
-                ArrayList<String> alItem = database.getByIndex(i + 1, tableName);
-                String[] item = new String[alItem.size()];
-                alItem.toArray(item);
+//                ArrayList<String> alItem = database.getByIndex(i + 1, tableName);
+//                String[] item = new String[alItem.size()];
+//                alItem.toArray(item);
 
                 int finalI = i;
                 tableColumn.setCellValueFactory((p) -> {
@@ -206,9 +212,8 @@ public class MainSceneController {
                     return new SimpleStringProperty(x != null && x.length > finalI ? x[finalI] : "<no data>");
                 });
 
-                if(i < table.size())
-                    tableView.getItems().add(item);
             }
+            tableView.setItems(FXCollections.observableArrayList(tableList));
         }
     }
 }

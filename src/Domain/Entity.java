@@ -9,6 +9,16 @@ public class Entity {
         this.attributes = attributes;
     }
 
+    public ArrayList<String> getAttributes() {
+        return attributes;
+    }
+
+    public String[] getAttributesArray() {
+        String[] attr = new String[attributes.size()];
+        attributes.toArray(attr);
+        return attr;
+    }
+
     @Override
     public String toString() {
         return "Entity " +
